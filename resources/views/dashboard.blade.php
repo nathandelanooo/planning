@@ -88,13 +88,17 @@
                                     <td class="text-muted small">{{ Str::limit($pengguna->password, 20) }}</td>
                                     <td><span class="fw-semibold text-dark">{{ $pengguna->nama_role }}</span></td>
                                     <td class="text-center">
-                                        <a href="/pengguna/{{ $pengguna->id_pengguna }}/edit" class="action-btn edit" title="Edit Data">
-                                            <i class="lni lni-pencil"></i>
-                                        </a>
-                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#hapus{{ $pengguna->id_pengguna }}">
-                                            <i class="lni lni-trash"></i>
-                                        Hapus   
-                                        </button>
+                                        @if(Auth::id() != $pengguna->id_pengguna)
+                                            <a href="/pengguna/{{ $pengguna->id_pengguna }}/edit" class="action-btn edit" title="Edit Data">
+                                                <i class="lni lni-pencil"></i>
+                                            </a>
+                                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#hapus{{ $pengguna->id_pengguna }}">
+                                                <i class="lni lni-trash"></i>
+                                            Hapus   
+                                            </button>
+                                        @else
+                                            <span class="badge bg-secondary" title="Tidak bisa mengedit akun sendiri">Anda</span>
+                                        @endif
                                     </td>
                                 </tr>
                                 @empty

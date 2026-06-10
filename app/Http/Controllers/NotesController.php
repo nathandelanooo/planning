@@ -24,4 +24,27 @@ class NotesController extends Controller
 
         return redirect('/notes')->with('success', 'Note berhasil ditambahkan!');
     }
+
+    public function edit($id)
+    {
+        $note = notes::findOrFail($id);
+        return view('CRUD.edit_notes', compact('note'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        notes::where('id_notes', $id)->update([
+            'judul_notes' => $request->judul_notes,
+            'isi_notes' => $request->isi_notes
+        ]);
+
+        return redirect('/notes')->with('success', 'Note berhasil diperbarui!');
+    }
+
+    public function destroy($id)
+    {
+        $note = notes::findOrFail($id);
+        $note->delete();
+        return redirect('/notes')->with('success', 'Note berhasil dihapus!');
+    }
 }

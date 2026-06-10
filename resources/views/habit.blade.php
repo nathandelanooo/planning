@@ -183,7 +183,6 @@
         <li class="nav-item"><a class="nav-link" href="/pengeluaran">Expense Tracker</a></li>
         <li class="nav-item"><a class="nav-link" href="/notes">Notes</a></li>
         <li class="nav-item"><a class="nav-link" href="/calendar">Calendar</a></li>
-        <li class="nav-item"><a class="nav-link" href="/reminder">Reminder</a></li>
       </ul>
     </div>
   </div>
@@ -275,15 +274,15 @@
                     <td>{{ $item->kategori_habit ?? '-' }}</td>
                     <td>
                       @if($item->status == 'active')
-                        <span class="badge-soft badge-progress"><i class="fa-solid fa-circle-notch"></i> Active</span>
+                        <span class="badge-soft badge-progress"><i class="fa-solid fa-spinner"></i> Active</span>
                       @elseif($item->status == 'completed')
-                        <span class="badge-soft badge-completed"><i class="fa-solid fa-check"></i> Completed</span>
+                        <span class="badge-soft badge-completed"><i class="fa-solid fa-check-circle"></i> Completed</span>
                       @else
-                        <span class="badge-soft badge-pending"><i class="fa-solid fa-pause"></i> Inactive</span>
+                        <span class="badge-soft badge-pending"><i class="fa-solid fa-circle-pause"></i> Inactive</span>
                       @endif
                     </td>
                     <td class="text-end">
-                      <a href="/habit/{{ $item->id_habit_tracker }}/edit" class="action-btn edit" title="Edit"><i class="fa-solid fa-pen"></i></a>
+                      <a href="/habit/{{ $item->id_habit_tracker }}/edit" class="action-btn edit" title="Edit"><i class="fa-solid fa-pencil"></i></a>
                       <form method="POST" action="/habit/{{ $item->id_habit_tracker }}" style="display:inline;" onsubmit="return confirm('Yakin hapus?')">
                         @csrf
                         @method('DELETE')

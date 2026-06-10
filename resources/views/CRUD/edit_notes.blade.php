@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Edit Habit | Planning</title>
+  <title>Edit Notes | Planning</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
@@ -42,7 +42,8 @@
     }
 
     .form-control,
-    .form-select{
+    .form-select,
+    textarea.form-control{
       border-radius:14px;
       border:1px solid #dfe4ee;
       padding:.8rem .95rem;
@@ -82,53 +83,38 @@
         <!-- Header Section -->
         <div class="d-flex align-items-center gap-3 mb-4 border-bottom pb-3">
           <div class="brand-badge">
-            <i class="fa-solid fa-check-double"></i>
+            <i class="fa-solid fa-note-sticky"></i>
           </div>
           <div>
-            <h5 class="view-title m-0">Edit Data Habit</h5>
-            <div class="section-sub">Perbarui detail habit tracker kamu</div>
+            <h5 class="view-title m-0">Edit Notes</h5>
+            <div class="section-sub">Perbarui catatan kamu</div>
           </div>
         </div>
 
-        <form action="/habit/{{ $habit->id_habit_tracker }}" method="POST">
+        <form action="/notes/{{ $note->id_notes }}" method="POST">
           @csrf
           @method('PUT')
 
           <div class="mb-3">
-            <label class="form-label">Nama Habit</label>
+            <label class="form-label">Judul Notes</label>
             <div class="input-group">
-              <span class="input-group-text bg-light text-muted border-end-0" style="border-radius: 14px 0 0 14px;"><i class="fa-solid fa-list-check"></i></span>
-              <input type="text" name="nama_habit" class="form-control border-start-0" style="border-radius: 0 14px 14px 0;" 
-                     placeholder="Misal: Lari pagi" value="{{ $habit->nama_habit }}" required>
+              <span class="input-group-text bg-light text-muted border-end-0" style="border-radius: 14px 0 0 14px;"><i class="fa-solid fa-heading"></i></span>
+              <input type="text" name="judul_notes" class="form-control border-start-0" style="border-radius: 0 14px 14px 0;" 
+                     placeholder="Misal: Ide Project Baru" value="{{ $note->judul_notes }}" required>
             </div>
           </div>
 
           <div class="mb-3">
-            <label class="form-label">Kategori Habit</label>
+            <label class="form-label">Isi Notes</label>
             <div class="input-group">
-              <span class="input-group-text bg-light text-muted border-end-0" style="border-radius: 14px 0 0 14px;"><i class="fa-solid fa-tag"></i></span>
-              <select name="kategori_habit" class="form-select border-start-0" style="border-radius: 0 14px 14px 0;" required>
-                <option value="Kesehatan & Kebugaran" {{ $habit->kategori_habit == 'Kesehatan & Kebugaran' ? 'selected' : '' }}>Kesehatan & Kebugaran</option>
-                <option value="Edukasi & Produktivitas" {{ $habit->kategori_habit == 'Edukasi & Produktivitas' ? 'selected' : '' }}>Edukasi & Produktivitas</option>
-                <option value="Mental & Spiritual" {{ $habit->kategori_habit == 'Mental & Spiritual' ? 'selected' : '' }}>Mental & Spiritual</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Status</label>
-            <div class="input-group">
-              <span class="input-group-text bg-light text-muted border-end-0" style="border-radius: 14px 0 0 14px;"><i class="fa-solid fa-spinner"></i></span>
-              <select name="status" class="form-select border-start-0" style="border-radius: 0 14px 14px 0;" required>
-                <option value="active" {{ $habit->status == 'active' ? 'selected' : '' }}>Active</option>
-                <option value="inactive" {{ $habit->status == 'inactive' ? 'selected' : '' }}>Inactive</option>
-                <option value="completed" {{ $habit->status == 'completed' ? 'selected' : '' }}>Completed</option>
-              </select>
+              <span class="input-group-text bg-light text-muted border-end-0 align-items-start pt-2" style="border-radius: 14px 0 0 14px;"><i class="fa-solid fa-pencil"></i></span>
+              <textarea name="isi_notes" class="form-control border-start-0" style="border-radius: 0 14px 14px 0;" 
+                        placeholder="Tulis catatan lengkapmu di sini..." rows="8" required>{{ $note->isi_notes }}</textarea>
             </div>
           </div>
 
           <div class="d-flex gap-2">
-            <a href="/habit" class="btn btn-light w-50" style="border-radius: 14px; border: 1px solid var(--border); font-weight: 600;">Batal</a>
+            <a href="/notes" class="btn btn-light w-50" style="border-radius: 14px; border: 1px solid var(--border); font-weight: 600;">Batal</a>
             <button type="submit" class="btn btn-primary w-50" style="background: var(--primary); border-color: var(--primary); border-radius: 14px; font-weight: 600;">
               Simpan Perubahan
             </button>

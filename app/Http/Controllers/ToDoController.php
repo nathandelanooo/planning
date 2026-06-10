@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\ToDoList;
+use App\Models\ToDo;
 use Illuminate\Support\Facades\Auth;
 
 class ToDoController extends Controller
@@ -11,12 +11,13 @@ class ToDoController extends Controller
     // 1. Menampilkan Halaman & Data Milik User Terkait
     public function index(Request $request)
     {
+        $dataToDo = ToDo::all();
         $status = $request->query('status', 'all');
         
         if ($status === 'all') {
-            $todos = ToDoList::where('id_pengguna', Auth::id())->get();
+            $todos = ToDo::where('id_pengguna', Auth::id())->get();
         } else {
-            $todos = ToDoList::where('id_pengguna', Auth::id())
+            $todos = ToDo::where('id_pengguna', Auth::id())
                 ->where('status', $status)
                 ->get();
         }
@@ -27,7 +28,7 @@ class ToDoController extends Controller
     // 2. Memproses Simpan Data Baru
     public function store(Request $request)
     {
-        $todo = new ToDoList();
+        $todo = new ToDo();
         
         // KUNCI UTAMA: Otomatis ikat dengan user yang sedang aktif di backend
         $todo->id_pengguna = Auth::id(); 
@@ -47,7 +48,7 @@ class ToDoController extends Controller
 
     public function edit($id)
     {
-        $todo = ToDoList::findOrFail($id);
+        $todo = ToDo::findOrFail($id);
         return view('CRUD.edit_todo', 
         [
             'todo' => $todo
@@ -56,7 +57,7 @@ class ToDoController extends Controller
 
     public function update(Request $request, $id)
     {
-        ToDoList::where('id_to_do_list', $id)->update([
+        ToDo::where('id_to_do_list', $id)->update([
             'judul_list' => $request->judul_list,
             'isi_list' => $request->isi_list,
             'tanggal_mulai' => $request->tanggal_mulai,
@@ -71,7 +72,7 @@ class ToDoController extends Controller
 
     public function destroy($id)
     {
-        ToDoList::where('id_to_do_list', $id)->delete();
+        ToDo::where('id_to_do_list', $id)->delete();
         return redirect('/todo')->with('success', 'To-Do berhasil dihapus!');
     }
 }

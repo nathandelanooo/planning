@@ -148,20 +148,40 @@
               <div class="section-sub">Daftar tugas harian dari backend</div>
             </div>
             <button class="btn btn-sm btn-primary px-3" style="background:var(--primary);border-color:var(--primary);border-radius:14px;">
-              <a href="todo.html" style="color: white; text-decoration: none;"><i class="fa-solid fa-plus me-1"></i>Tambah Tugas</a>
+              <a href="/todo" style="color: white; text-decoration: none;"><i class="fa-solid fa-plus me-1"></i>Tambah Tugas</a>
             </button>
           </div>
 
-          <div class="d-flex flex-wrap gap-2 tabs-btns mb-3">
-            <button class="btn btn-sm active" data-filter="all">Semua</button>
-            <button class="btn btn-sm" data-filter="pending">Pending</button>
-            <button class="btn btn-sm" data-filter="progress">In Progress</button>
-            <button class="btn btn-sm" data-filter="completed">Completed</button>
-          </div>
+          <div id="todoList">
+            @forelse($todolist ?? [] as $todo)
+              <div class="note-item d-flex align-items-center justify-content-between gap-3 mb-3 p-2" style="border-bottom: 1px solid var(--border);">
+                <div class="d-flex align-items-start gap-3">
+                  <div class="mini-icon" style="background:var(--soft-purple); color:var(--primary); margin-top:2px; width:36px; height:36px; display:grid; place-items:center; border-radius:10px;">
+                    <i class="fa-regular fa-square-check"></i>
+                  </div>
+                  <div>
+                    <div class="fw-semibold" style="font-size: 0.95rem;">{{ $todo->judul_list }}</div>
+                    <div class="text-muted" style="font-size:0.82rem;">
+                      <i class="fa-regular fa-calendar-days me-1"></i> {{ \Carbon\Carbon::parse($todo->tanggal_mulai)->format('d M Y') }} 
+                      <span class="mx-1">•</span>
+                      <i class="fa-regular fa-clock me-1"></i> {{ $todo->waktu_mulai }}
+                    </div>
+                  </div>
+                </div>
 
-          <div id="todoList"></div>
-          <div class="pt-2">
-            <a href="#" class="stat-link">Lihat semua tugas <i class="fa-solid fa-chevron-right ms-1"></i></a>
+                <div>
+                  @if($todo->status == 'pending')
+                    <span class="badge-soft badge-pending">Pending</span>
+                  @elseif($todo->status == 'progress')
+                    <span class="badge-soft badge-progress">In Progress</span>
+                  @elseif($todo->status == 'completed')
+                    <span class="badge-soft badge-completed">Completed</span>
+                  @endif
+                </div>
+              </div>
+            @empty
+              <div class="empty-state">Belum ada tugas hari ini.</div>
+            @endforelse
           </div>
         </div>
       </div>
@@ -175,22 +195,37 @@
             </div>
             <a href="#" class="stat-link">Lihat semua</a>
           </div>
-          <div id="habitList"></div>
+          <div id="habitList">
+            @forelse($recenthabit ?? [] as $habit)
+              <div class="note-item d-flex align-items-center justify-content-between gap-3 mb-3 p-2" style="border-bottom: 1px solid var(--border);">
+                <div class="d-flex align-items-start gap-3">
+                  <div class="mini-icon" style="background:var(--soft-green); color:#16a34a; margin-top:2px; width:36px; height:36px; display:grid; place-items:center; border-radius:10px;">
+                    <i class="fa-solid fa-bullseye"></i>
+                  </div>
+                  <div>
+                    <div class="fw-semibold" style="font-size: 0.95rem;">{{ $habit->kategori_habit }}</div>
+                    <div class="muted" style="font-size:0.85rem;">{{ Str::limit($habit->nama_habit, 50) }}</div>
+                  </div>
+                </div>
+                
+                <div>
+                  @if($habit->status == 'active')
+                    <span class="badge-soft badge-progress"><i class="fa-solid fa-spinner"></i> Active</span>
+                  @elseif($habit->status == 'completed')
+                    <span class="badge-soft badge-completed"><i class="fa-solid fa-check-circle"></i> Completed</span>
+                  @else
+                    <span class="badge-soft badge-pending"><i class="fa-solid fa-circle-pause"></i> Inactive</span>
+                  @endif
+                </div>
+              </div>
+            @empty
+              <div class="empty-state">Belum ada kebiasaan.</div>
+            @endforelse
+          </div>
         </div>
       </div>
 
-      <div class="col-lg-3" id="reminder">
-        <div class="panel-card p-4 h-100">
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <div>
-              <h5 class="section-title">Reminders</h5>
-              <div class="section-sub">Pengingat aktif</div>
-            </div>
-            <a href="#" class="stat-link">Lihat semua</a>
-          </div>
-          <div id="reminderList"></div>
-        </div>
-      </div>
+
     </div>
 
     <div class="row g-3 mt-1">
@@ -281,10 +316,7 @@
               <h5 class="section-title">Activity Summary</h5>
               <div class="section-sub">Ringkasan aktivitas mingguan</div>
             </div>
-            <select class="form-select form-select-sm" style="width:auto;border-radius:14px;">
-              <option>This Week</option>
-              <option>This Month</option>
-            </select>
+            
           </div>
           <div class="chart-wrap">
             <canvas id="activityChart"></canvas>

@@ -170,7 +170,6 @@
         <li class="nav-item"><a class="nav-link active" href="/pengeluaran">Expense Tracker</a></li>
         <li class="nav-item"><a class="nav-link" href="/notes">Notes</a></li>
         <li class="nav-item"><a class="nav-link" href="/calendar">Calendar</a></li>
-        <li class="nav-item"><a class="nav-link" href="/reminder">Reminder</a></li>
       </ul>
     </div>
   </div>
@@ -197,9 +196,9 @@
               <label class="form-label">Kategori</label>
               <select class="form-select" id="expense_kategori_pengeluaran" name="kategori_pengeluaran" required>
                 <option value="">-- Pilih Kategori --</option>
-                <option value="Kebutuhan Pokok">Kebutuhan Pokok</option>
-                <option value="Transportasi & Tagihan">Transportasi & Tagihan</option>
-                <option value="Hiburan & Rekreasi">Hiburan & Rekreasi</option>
+                @foreach($kategoris as $kategori)
+                  <option value="{{ $kategori }}">{{ $kategori }}</option>
+                @endforeach
               </select>
             </div>
 
@@ -264,7 +263,7 @@
                     <td>{{ $item->keterangan }}</td>
                     <td>Rp {{ number_format($item->nominal, 0, ',', '.') }}</td>
                     <td class="text-end">
-                      <a href="/pengeluaran/{{ $item->id_pengeluaran }}/edit" class="action-btn edit" title="Edit"><i class="fa-solid fa-pen"></i></a>
+                      <a href="/pengeluaran/{{ $item->id_pengeluaran }}/edit" class="action-btn edit" title="Edit"><i class="fa-solid fa-pencil"></i></a>
                       <form method="POST" action="/pengeluaran/{{ $item->id_pengeluaran }}" style="display:inline;" onsubmit="return confirm('Yakin hapus?')">
                         @csrf
                         @method('DELETE')

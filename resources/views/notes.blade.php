@@ -187,7 +187,6 @@
         <li class="nav-item"><a class="nav-link" href="/pengeluaran">Expense Tracker</a></li>
         <li class="nav-item"><a class="nav-link active" href="/notes">Notes</a></li>
         <li class="nav-item"><a class="nav-link" href="/calendar">Calendar</a></li>
-        <li class="nav-item"><a class="nav-link" href="/reminder">Reminder</a></li>
       </ul>
     </div>
   </div>
@@ -245,7 +244,35 @@
             </div>
           </div>
 
-          <div id="notesListPage"></div>
+          <div id="notesListPage">
+            @forelse($notes as $note)
+              <div class="note-card">
+                <div class="d-flex justify-content-between align-items-start gap-2">
+                  <div class="flex-grow-1">
+                    <div class="fw-semibold mb-1" style="font-size: 0.95rem;">{{ $note->judul_notes }}</div>
+                    <div class="text-muted" style="font-size: 0.85rem; line-height: 1.5;">
+                      {{ Str::limit($note->isi_notes, 150) }}
+                    </div>
+                  </div>
+                  
+                  <div class="d-flex gap-1 flex-shrink-0">
+                    <a href="/notes/{{ $note->id_notes }}/edit" class="action-btn edit" title="Edit">
+                      <i class="fa-solid fa-pencil"></i>
+                    </a>
+                    <form method="POST" action="/notes/{{ $note->id_notes }}" style="display:inline;" onsubmit="return confirm('Yakin hapus?')">
+                      @csrf
+                      @method('DELETE')
+                      <button type="submit" class="action-btn delete" title="Hapus" style="border:none;background:none;cursor:pointer;">
+                        <i class="fa-solid fa-trash"></i>
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            @empty
+              <div class="empty-state">Belum ada catatan notes.</div>
+            @endforelse
+          </div>
         </div>
       </div>
     </div>

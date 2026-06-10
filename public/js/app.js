@@ -262,7 +262,6 @@ function renderDashboardSummary() {
 
   const completedTodos = db.todos.filter(t => t.status === "completed").length;
   const activeHabits = db.habits.filter(h => h.status === "active").length;
-  const totalExpense = db.expenses.reduce((s, e) => s + Number(e.nominal || 0), 0);
   const tasksToday = db.todos.filter(t => t.tanggal_mulai === todayISO() || t.tanggal_selesai === todayISO()).length;
   const score = db.todos.length
     ? Math.round((completedTodos / db.todos.length) * 60 + (activeHabits / Math.max(db.habits.length, 1)) * 40)
@@ -270,7 +269,6 @@ function renderDashboardSummary() {
 
   if (statTasks) statTasks.textContent = tasksToday;
   if (statHabits) statHabits.textContent = activeHabits;
-  if (statExpense) statExpense.textContent = rupiah(totalExpense);
   if (statScore) statScore.textContent = `${score}%`;
   if (notifCount) notifCount.textContent = db.reminders.filter(r => r.status === "active").length;
 }

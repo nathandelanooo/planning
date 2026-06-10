@@ -39,9 +39,6 @@ class CalendarController extends Controller
             'orderBy' => 'startTime'
         ]);
         
-        // Hapus dd() kalau datanya sudah sukses muncul di layar
-        // dd($response->json());
-        
         $googleEvents = $response->json()['items'] ?? [];
         // dd($response->json());
 

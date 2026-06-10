@@ -68,7 +68,6 @@
         <li class="nav-item"><a class="nav-link" href="/pengeluaran">Expense Tracker</a></li>
         <li class="nav-item"><a class="nav-link" href="/notes">Notes</a></li>
         <li class="nav-item"><a class="nav-link" href="/calendar">Calendar</a></li>
-        <li class="nav-item"><a class="nav-link" href="/reminder">Reminder</a></li>
       </ul>
     </div>
   </div>
@@ -182,7 +181,7 @@
                       @endif
                     </td>
                     <td class="text-end">
-                      <a href="/todo/{{ $item->id_to_do_list }}/edit" class="action-btn edit"><i class="fa-solid fa-pen"></i></a>
+                      <a href="/todo/{{ $item->id_to_do_list }}/edit" class="action-btn edit"><i class="fa-solid fa-pencil"></i></a>
                       <button class="action-btn delete"><i class="fa-solid fa-trash"></i></button>
                     </td>
                   </tr>

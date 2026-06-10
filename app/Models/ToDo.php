@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ToDoList extends Model
+class ToDo extends Model
 {
     protected $table = 'to_do_list';
     protected $primaryKey = 'id_to_do_list';

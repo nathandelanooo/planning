@@ -204,7 +204,6 @@
         <li class="nav-item"><a class="nav-link" href="/pengeluaran">Expense Tracker</a></li>
         <li class="nav-item"><a class="nav-link" href="/notes">Notes</a></li>
         <li class="nav-item"><a class="nav-link active" href="/calendar">Calendar</a></li>
-        <li class="nav-item"><a class="nav-link" href="/reminder">Reminder</a></li>
       </ul>
     </div>
   </div>

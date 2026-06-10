@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login | Planning</title>
+  <title>Sign Up | Planning</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
@@ -143,6 +143,20 @@
       box-shadow:0 0 0 .2rem rgba(111,66,255,.08) !important;
     }
 
+    .form-control.is-invalid{
+      border-color:#dc3545;
+    }
+
+    .form-control.is-invalid:focus{
+      border-color:#dc3545;
+      box-shadow:0 0 0 .2rem rgba(220,53,69,.25) !important;
+    }
+
+    .invalid-feedback{
+      font-size:.85rem;
+      margin-top:.25rem;
+    }
+
     .login-title{
       font-size:clamp(1.8rem,3vw,2.4rem);
       font-weight:800;
@@ -171,13 +185,6 @@
       font-size:.88rem;
     }
 
-    .demo-box{
-      border:1px solid #eadfff;
-      background:#faf7ff;
-      border-radius:18px;
-      padding:14px 16px;
-    }
-
     .password-toggle{
       position:absolute;
       right:14px;
@@ -187,6 +194,21 @@
       background:transparent;
       color:#7a8191;
       padding:0;
+    }
+
+    .signup-link{
+      text-align:center;
+      margin-top:1rem;
+    }
+
+    .signup-link a{
+      color:var(--primary);
+      font-weight:600;
+      text-decoration:none;
+    }
+
+    .signup-link a:hover{
+      text-decoration:underline;
     }
 
     @media (max-width: 991px){
@@ -213,9 +235,9 @@
                     <i class="fa-regular fa-clock"></i>
                   </div>
                 </div>
-                <h2 class="login-title mb-3">Plan your day, organize your life.</h2>
+                <h2 class="login-title mb-3">Bergabunglah dengan kami</h2>
                 <p class="login-sub mb-0">
-                  Kelola To-Do, Habit, Expense, Notes, Calendar, dan Reminder dalam satu aplikasi.
+                  Mulai kelola To-Do, Habit, Expense, Notes, Calendar, dan Reminder dalam satu aplikasi.
                 </p>
               </div>
             </div>
@@ -226,38 +248,69 @@
                   <div class="brand-badge">P</div>
                   <div>
                     <div class="fw-bold fs-5">Planning</div>
-                    <div class="small-note">Sign in to continue</div>
+                    <div class="small-note">Create your account</div>
                   </div>
                 </div>
 
-                <div id="loginAlert" class="alert alert-danger d-none" role="alert"></div>
+                @if ($errors->any())
+                  <div class="alert alert-danger" role="alert">
+                    <ul class="mb-0">
+                      @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                      @endforeach
+                    </ul>
+                  </div>
+                @endif
 
-                <form id="loginForm" action="/login" method="POST">
+                @if (session('success'))
+                  <div class="alert alert-success" role="alert">
+                    {{ session('success') }}
+                  </div>
+                @endif
+
+                <form id="signupForm" action="/signup" method="POST" novalidate>
                   @csrf
                   <div class="mb-3">
                     <label class="form-label">Username</label>
-                    <input type="text" id="username" name="username" class="form-control" placeholder="Masukkan username" required>
+                    <input type="text" id="username" name="username" class="form-control @error('username') is-invalid @enderror" placeholder="Masukkan username" value="{{ old('username') }}" required>
+                    @error('username')
+                      <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                   </div>
 
                   <div class="mb-3">
                     <label class="form-label">Password</label>
                     <div class="position-relative">
-                      <input type="password" id="password" name="password" class="form-control pe-5" placeholder="Masukkan password" required>
+                      <input type="password" id="password" name="password" class="form-control pe-5 @error('password') is-invalid @enderror" placeholder="Masukkan password" required>
                       <button type="button" class="password-toggle" id="togglePassword">
                         <i class="fa-regular fa-eye"></i>
                       </button>
                     </div>
+                    @error('password')
+                      <div class="invalid-feedback d-block">{{ $message }}</div>
+                    @enderror
                   </div>
 
-
+                  <div class="mb-3">
+                    <label class="form-label">Konfirmasi Password</label>
+                    <div class="position-relative">
+                      <input type="password" id="password_confirmation" name="password_confirmation" class="form-control pe-5 @error('password_confirmation') is-invalid @enderror" placeholder="Ulangi password" required>
+                      <button type="button" class="password-toggle" id="togglePasswordConfirm">
+                        <i class="fa-regular fa-eye"></i>
+                      </button>
+                    </div>
+                    @error('password_confirmation')
+                      <div class="invalid-feedback d-block">{{ $message }}</div>
+                    @enderror
+                  </div>
 
                   <button type="submit" class="btn btn-primary w-100 py-2">
-                    Login
+                    Buat Akun
                   </button>
                 </form>
 
                 <p class="small-note text-center mt-4 mb-0">
-                  Belum punya akun? <a href="/signup" style="color:var(--primary);font-weight:600;text-decoration:none;">Daftar di sini</a>
+                  Sudah punya akun? <a href="/login" style="color:var(--primary);font-weight:600;text-decoration:none;">Login di sini</a>
                 </p>
               </div>
             </div>
@@ -269,5 +322,34 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  document.getElementById('togglePassword').addEventListener('click', function() {
+    const password = document.getElementById('password');
+    const icon = this.querySelector('i');
+    if (password.type === 'password') {
+      password.type = 'text';
+      icon.classList.remove('fa-eye');
+      icon.classList.add('fa-eye-slash');
+    } else {
+      password.type = 'password';
+      icon.classList.remove('fa-eye-slash');
+      icon.classList.add('fa-eye');
+    }
+  });
+
+  document.getElementById('togglePasswordConfirm').addEventListener('click', function() {
+    const password = document.getElementById('password_confirmation');
+    const icon = this.querySelector('i');
+    if (password.type === 'password') {
+      password.type = 'text';
+      icon.classList.remove('fa-eye');
+      icon.classList.add('fa-eye-slash');
+    } else {
+      password.type = 'password';
+      icon.classList.remove('fa-eye-slash');
+      icon.classList.add('fa-eye');
+    }
+  });
+</script>
 </body>
 </html>

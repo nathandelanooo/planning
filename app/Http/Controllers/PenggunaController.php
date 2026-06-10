@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Pengguna;
+use Illuminate\Support\Facades\Auth;
 
 class PenggunaController extends Controller
 {
@@ -21,6 +22,11 @@ class PenggunaController extends Controller
     }
     public function edit($id)
     {
+        // Cegah admin mengedit user sendiri
+        if (Auth::id() == $id) {
+            return redirect('/dashboard')->with('error', 'Anda tidak bisa mengedit akun sendiri.');
+        }
+
         $data_pengguna = Pengguna::findOrFail($id);
         return view('pengguna',[
             'pengguna' => $data_pengguna
@@ -28,16 +34,32 @@ class PenggunaController extends Controller
     }
     public function update(Request $request, $id)
     {
-        Pengguna::where('id_pengguna', $id)->update([
+        // Cegah admin mengedit user sendiri
+        if (Auth::id() == $id) {
+            return redirect('/dashboard')->with('error', 'Anda tidak bisa mengedit akun sendiri.');
+        }
+
+        $data = [
             'username' => $request->username,
-            'password' => bcrypt($request->password),
             'id_role' => $request->id_role
-        ]);
+        ];
+
+        // Hanya update password jika ada input password
+        if ($request->filled('password')) {
+            $data['password'] = bcrypt($request->password);
+        }
+
+        Pengguna::where('id_pengguna', $id)->update($data);
 
         return redirect('/dashboard')->with('success', 'Data pengguna berhasil diperbarui.');
     }
     public function destroy($id)
     {
+        // Cegah admin menghapus user sendiri
+        if (Auth::id() == $id) {
+            return redirect('/dashboard')->with('error', 'Anda tidak bisa menghapus akun sendiri.');
+        }
+
         Pengguna::findOrFail($id)->delete();
         return redirect('/dashboard')->with('success', 'Data pengguna berhasil dihapus.');
     }

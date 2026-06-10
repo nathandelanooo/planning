@@ -8,21 +8,28 @@ use App\Http\Controllers\ToDoController;
 use App\Http\Controllers\PengeluaranController;
 use App\Http\Controllers\HabitController;
 use App\Http\Controllers\CalendarController;
+use App\Models\ToDo;
 use App\Models\Pengeluaran;
+use App\Models\notes;
+use App\Models\HabitTracker;
 
 // 1. Jalur Umum
 Route::get('/login', function(){ return view('login'); })->name('login');
 Route::post('/login', [AuthController::class, 'login']);
+Route::get('/signup', [AuthController::class, 'showSignup'])->name('signup');
+Route::post('/signup', [AuthController::class, 'signup']);
 Route::get('/logout', [AuthController::class, 'logout']);
 
 // 2. Gerbang Wajib Login (User & Admin)
 Route::middleware(['auth'])->group(function () {
     Route::get('/index', function() {
         $userId = Auth::id();
+        $recenthabit = HabitTracker::where('id_pengguna', $userId)->latest('id_habit_tracker')->limit(3)->get();
+        $todolist = ToDo::where('id_pengguna', $userId)->latest('id_to_do_list')->limit(3)->get();
         $totalExpense = Pengeluaran::where('id_pengguna', $userId)->sum('nominal');
         $expenseCount = Pengeluaran::where('id_pengguna', $userId)->count();
-        $recentNotes = \App\Models\notes::where('id_pengguna', $userId)->latest('id_notes')->limit(5)->get();
-        return view('index', compact('totalExpense', 'expenseCount', 'recentNotes'));
+        $recentNotes = Notes::where('id_pengguna', $userId)->latest('id_notes')->limit(5)->get();
+        return view('index', compact('totalExpense', 'expenseCount', 'recentNotes', 'todolist', 'recenthabit'));
     })->name('home');
     Route::get('/todo', [ToDoController::class, 'index']);
     Route::post('/todo', [ToDoController::class, 'store']);
@@ -40,9 +47,11 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/pengeluaran/{id}', [PengeluaranController::class, 'update']);
     Route::delete('/pengeluaran/{id}', [PengeluaranController::class, 'destroy']);
     Route::get('/calendar', [CalendarController::class, 'index']);
-    Route::get('/reminder', function(){ return view('reminder'); });
     Route::get('/notes', [NotesController::class, 'index']);
-    Route::post('/notes', [NotesController::class, 'store']); 
+    Route::post('/notes', [NotesController::class, 'store']);
+    Route::get('/notes/{id}/edit', [NotesController::class, 'edit']);
+    Route::put('/notes/{id}', [NotesController::class, 'update']);
+    Route::delete('/notes/{id}', [NotesController::class, 'destroy']); 
 
     // 3. Gerbang Khusus Admin
     Route::middleware(['admin'])->group(function () {
