@@ -18,7 +18,7 @@ class PengeluaranController extends Controller
 
     public function index()
     {
-        $data_pengeluaran = Pengeluaran::all();
+        $data_pengeluaran = Pengeluaran::where('id_pengguna', Auth::id())->get();
         $kategoris = $this->getPengeluaranCategories();
         
         return view('pengeluaran', compact('data_pengeluaran', 'kategoris'));

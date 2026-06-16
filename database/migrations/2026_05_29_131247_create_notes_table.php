@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_pengguna');
             $table->string('judul_notes', 100);
             $table->string('isi_notes', 5000);
-
+            $table->string('voice_memo')->nullable();
             $table->foreign('id_pengguna')->references('id_pengguna')->on('pengguna')->onDelete('cascade'); 
         });
     }

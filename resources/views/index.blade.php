@@ -34,16 +34,11 @@
         <li class="nav-item"><a class="nav-link" href="/calendar">Calendar</a></li>
       </ul>
 
-      <div class="d-flex align-items-center gap-2">
-        <button class="top-action"><i class="fa-solid fa-magnifying-glass"></i></button>
-        <button class="top-action position-relative">
-          <i class="fa-regular fa-bell"></i>
-          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">3</span>
-        </button>
+
         
         <div class="dropdown ms-1">
           <button class="btn p-0 border-0 d-flex align-items-center gap-2 dropdown-toggle text-start" type="button" id="profileMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="box-shadow: none;">
-            <img src="https://i.pravatar.cc/80?img=12" alt="user" style="width:42px;height:42px;border-radius:14px;object-fit:cover;border:1px solid var(--border);">
+            
             <div class="d-none d-md-block">
               <div class="fw-bold text-dark" style="font-size: 0.95rem;">{{ ucfirst(Auth::user()->username) }}</div>
               <div class="text-muted small" style="font-size: 0.78rem; margin-top: -2px;">
@@ -54,13 +49,8 @@
 
           <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2 p-2" aria-labelledby="profileMenuButton" style="border-radius: 16px; min-width: 180px;">
             <li>
-              <a class="dropdown-item py-2 d-flex align-items-center gap-2 text-muted" href="#profile" style="border-radius: 10px; font-size: 0.9rem;">
-                <i class="fa-regular fa-user" style="width: 16px;"></i> Profil Saya
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item py-2 d-flex align-items-center gap-2 text-muted" href="#settings" style="border-radius: 10px; font-size: 0.9rem;">
-                <i class="fa-solid fa-sliders" style="width: 16px;"></i> Pengaturan
+              <a href="/dashboard" class="dropdown-item py-2 d-flex align-items-center gap-2 text-muted"   style="border-radius: 10px; font-size: 0.9rem;">
+                <i class="fa-solid fa-sliders" style="width: 16px;"></i> Dashboard
               </a>
             </li>
             <li><hr class="dropdown-divider border-light my-2"></li>
@@ -105,8 +95,8 @@
       <div class="col-6 col-lg-2">
         <div class="stat-card soft-purple">
           <div class="mini-icon mb-3"><i class="fa-regular fa-clipboard"></i></div>
-          <div class="stat-value" id="statTasks">12</div>
-          <div class="stat-label">Tasks Today</div>
+          <div class="stat-value" id="statTasks">{{ $alltask ?? 0 }}</div>
+          <div class="stat-label">Tasks To Do</div>
           <a href="#todo" class="stat-link d-inline-block mt-4">Lihat semua <i class="fa-solid fa-chevron-right ms-1"></i></a>
         </div>
       </div>
@@ -114,7 +104,7 @@
       <div class="col-6 col-lg-2">
         <div class="stat-card soft-green">
           <div class="mini-icon mb-3" style="color:#16a34a;background:#eafbf0;"><i class="fa-solid fa-bullseye"></i></div>
-          <div class="stat-value" id="statHabits">5</div>
+          <div class="stat-value" id="statHabits">{{ $activehabit ?? 0 }}</div>
           <div class="stat-label">Active Habits</div>
           <a href="#habit" class="stat-link d-inline-block mt-4" style="color:#16a34a;">Lihat semua <i class="fa-solid fa-chevron-right ms-1"></i></a>
         </div>
@@ -126,15 +116,6 @@
           <div class="stat-value" id="statExpense">Rp {{ number_format($totalExpense ?? 0, 0, ',', '.') }}</div>
           <div class="stat-label">Total Expense</div>
           <a href="#expense" class="stat-link d-inline-block mt-4" style="color:#f59e0b;">Lihat detail <i class="fa-solid fa-chevron-right ms-1"></i></a>
-        </div>
-      </div>
-
-      <div class="col-6 col-lg-2">
-        <div class="stat-card soft-blue">
-          <div class="mini-icon mb-3" style="color:#2563eb;background:#eaf1ff;"><i class="fa-solid fa-chart-line"></i></div>
-          <div class="stat-value" id="statScore">85%</div>
-          <div class="stat-label">Productivity Score</div>
-          <a href="#analytics" class="stat-link d-inline-block mt-4" style="color:#2563eb;">Lihat analitik <i class="fa-solid fa-chevron-right ms-1"></i></a>
         </div>
       </div>
     </div>
@@ -234,22 +215,56 @@
           <div class="d-flex justify-content-between align-items-center mb-3">
             <div>
               <h5 class="section-title">Calendar</h5>
-              <div class="section-sub" id="calendarMonth"></div>
+              <div class="section-sub" id="calendarMonth">{{ $currentDate->translatedFormat('F Y') }}</div>
             </div>
             <div class="d-flex gap-2">
-              <button class="top-action" id="prevMonth"><i class="fa-solid fa-chevron-left"></i></button>
-              <button class="top-action" id="nextMonth"><i class="fa-solid fa-chevron-right"></i></button>
+              <a href="?month={{ ($month == 1 ? 12 : $month - 1) }}&year={{ ($month == 1 ? $year - 1 : $year) }}" class="top-action"><i class="fa-solid fa-chevron-left"></i></a>
+              <a href="?month={{ ($month == 12 ? 1 : $month + 1) }}&year={{ ($month == 12 ? $year + 1 : $year) }}" class="top-action"><i class="fa-solid fa-chevron-right"></i></a>
             </div>
           </div>
 
           <div class="calendar-box">
-            <div class="cal-grid mb-2" id="calHead"></div>
-            <div class="cal-grid" id="calGrid"></div>
+            <div class="cal-grid mb-2">
+              @foreach(['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'] as $day)
+                <div class="cal-day-head">{{ $day }}</div>
+              @endforeach
+            </div>
+            <div class="cal-grid">
+              {{-- Empty cells untuk hari sebelum bulan dimulai --}}
+              @for ($i = 0; $i < $firstDayOfWeek; $i++)
+                <div class="cal-day empty"></div>
+              @endfor
+
+              {{-- Tanggal 1 sampai akhir bulan --}}
+              @for ($d = 1; $d <= $daysInMonth; $d++)
+                  @php
+                      $dateStr = $year . '-' . str_pad($month, 2, '0', STR_PAD_LEFT) . '-' . str_pad($d, 2, '0', STR_PAD_LEFT);
+                      $hasEvent = isset($eventsByDate[$dateStr]) ? 'has-event' : '';
+                      $isToday = ($dateStr == date('Y-m-d')) ? 'today' : '';
+                      $isActive = ($dateStr == $selectedDate) ? 'active-day' : '';
+                  @endphp
+                  <a href="?month={{ $month }}&year={{ $year }}&date={{ $dateStr }}" class="cal-day text-decoration-none {{ $hasEvent }} {{ $isToday }} {{ $isActive }}">
+                      {{ $d }}
+                  </a>
+              @endfor
+            </div>
           </div>
 
           <div class="mt-4">
-            <div class="fw-bold mb-2">Today’s Schedule</div>
-            <div id="todaySchedule"></div>
+            <div class="fw-bold mb-2">Today's Schedule</div>
+            @forelse($selectedDayEvents as $event)
+              <div class="event-card mb-2">
+                <div class="fw-bold" style="font-size: 0.9rem;">{{ $event['judul_list'] }}</div>
+                <div class="text-muted small">
+                  <i class="fa-regular fa-clock me-1"></i> {{ $event['waktu_mulai'] }} - {{ $event['waktu_selesai'] }}
+                </div>
+                @if($event['isi_list'])
+                  <div class="text-muted small mt-1" style="font-size: 0.8rem;">{{ $event['isi_list'] }}</div>
+                @endif
+              </div>
+            @empty
+              <div class="empty-state">Tidak ada agenda.</div>
+            @endforelse
           </div>
         </div>
       </div>
@@ -304,23 +319,6 @@
                <div class="empty-state">Belum ada notes.</div>
              @endforelse
            </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="row g-3 mt-1" id="analytics">
-      <div class="col-lg-12">
-        <div class="panel-card p-4">
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <div>
-              <h5 class="section-title">Activity Summary</h5>
-              <div class="section-sub">Ringkasan aktivitas mingguan</div>
-            </div>
-            
-          </div>
-          <div class="chart-wrap">
-            <canvas id="activityChart"></canvas>
-          </div>
         </div>
       </div>
     </div>

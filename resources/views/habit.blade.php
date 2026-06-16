@@ -301,18 +301,7 @@
             </table>
           </div>
 
-          <div class="summary-mini mt-3">
-            <div class="d-flex justify-content-between align-items-center">
-              <div>
-                <div class="fw-bold">Progress Ringkas</div>
-                <div class="section-sub">Contoh tampilan progress habit</div>
-              </div>
-              <div class="fw-bold text-success">75%</div>
-            </div>
-            <div class="progress mt-2">
-              <div class="progress-bar" style="width:75%"></div>
-            </div>
-          </div>
+          
         </div>
       </div>
     </div>

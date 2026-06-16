@@ -19,7 +19,7 @@ class HabitController extends Controller
 
     public function index()
     {
-        $data_habit = HabitTracker::all();
+        $data_habit = HabitTracker::where('id_pengguna', Auth::id())->get();
         $kategoris = $this->getHabitCategories();
         
         return view('habit', compact('data_habit', 'kategoris'));

@@ -80,7 +80,6 @@
     <div class="col-lg-7"> 
       <div class="form-card p-4 shadow-sm bg-white">
         
-        <!-- Header Section -->
         <div class="d-flex align-items-center gap-3 mb-4 border-bottom pb-3">
           <div class="brand-badge">
             <i class="fa-solid fa-note-sticky"></i>
@@ -91,7 +90,7 @@
           </div>
         </div>
 
-        <form action="/notes/{{ $note->id_notes }}" method="POST">
+        <form action="/notes/{{ $note->id_notes }}" method="POST" enctype="multipart/form-data">
           @csrf
           @method('PUT')
 
@@ -111,6 +110,26 @@
               <textarea name="isi_notes" class="form-control border-start-0" style="border-radius: 0 14px 14px 0;" 
                         placeholder="Tulis catatan lengkapmu di sini..." rows="8" required>{{ $note->isi_notes }}</textarea>
             </div>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label">Voice Memo (Opsional)</label>
+            
+            @if($note->file_m)
+              <div class="mb-2 p-3 border rounded" style="background: #fafbff; border-color: #e9ebf2 !important;">
+                <small class="text-muted d-block mb-2 fw-semibold"><i class="fa-solid fa-headphones me-1"></i> Audio Saat Ini:</small>
+                <audio controls style="width: 100%; height: 36px;">
+                  <source src="{{ asset('storage/' . $note->file_m) }}" type="audio/mpeg">
+                  Browser Anda tidak mendukung elemen audio.
+                </audio>
+              </div>
+            @endif
+
+            <div class="input-group mt-2">
+              <span class="input-group-text bg-light text-muted border-end-0" style="border-radius: 14px 0 0 14px;"><i class="fa-solid fa-microphone"></i></span>
+              <input type="file" name="voice_memo" class="form-control border-start-0" style="border-radius: 0 14px 14px 0;" accept="audio/mp3, audio/wav">
+            </div>
+            <small class="text-muted mt-1 d-block" style="font-size: 0.75rem;">*Upload file baru jika ingin mengganti audio yang lama (Maks 5MB).</small>
           </div>
 
           <div class="d-flex gap-2">

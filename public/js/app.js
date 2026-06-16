@@ -29,19 +29,7 @@ function loadDB() {
       { id_kategori: 6, jenis_kategori: "Academic", tipe_kategori: "expense" },
       { id_kategori: 7, jenis_kategori: "Daily", tipe_kategori: "expense" }
     ],
-    todos: [
-      {
-        id_toDoList: 1,
-        id_pengguna: 1,
-        judul_list: "Kerjakan Laporan UTS",
-        isi_list: "Selesaikan revisi bagian CRUD dan navigasi SPA.",
-        tanggal_mulai: isoFromOffset(0),
-        waktu_mulai: "08:00",
-        tanggal_selesai: isoFromOffset(1),
-        waktu_selesai: "20:00",
-        status: "pending"
-      }
-    ],
+    todos: [],
     habits: [
       {
         id_habit_tracker: 1,
@@ -254,21 +242,14 @@ function clearReminderForm() {
 }
 
 function renderDashboardSummary() {
-  const statTasks = document.getElementById("statTasks");
-  const statHabits = document.getElementById("statHabits");
-  const statExpense = document.getElementById("statExpense");
   const statScore = document.getElementById("statScore");
   const notifCount = document.getElementById("notifCount");
 
   const completedTodos = db.todos.filter(t => t.status === "completed").length;
-  const activeHabits = db.habits.filter(h => h.status === "active").length;
-  const tasksToday = db.todos.filter(t => t.tanggal_mulai === todayISO() || t.tanggal_selesai === todayISO()).length;
   const score = db.todos.length
-    ? Math.round((completedTodos / db.todos.length) * 60 + (activeHabits / Math.max(db.habits.length, 1)) * 40)
+    ? Math.round((completedTodos / db.todos.length) * 60 + (Math.max(db.habits.length, 1)) * 40)
     : 0;
 
-  if (statTasks) statTasks.textContent = tasksToday;
-  if (statHabits) statHabits.textContent = activeHabits;
   if (statScore) statScore.textContent = `${score}%`;
   if (notifCount) notifCount.textContent = db.reminders.filter(r => r.status === "active").length;
 }
@@ -487,8 +468,12 @@ function renderReminders() {
 
 function getEventsForDate(dateISO) {
   const todoEvents = db.todos
-    .filter(t => t.tanggal_mulai === dateISO || t.tanggal_selesai === dateISO)
-    .map(t => ({ title: t.judul_list, time: t.waktu_mulai, type: "To-Do", status: t.status }));
+    .filter(t => t.tanggal_selesai === dateISO)
+    .map(t => {
+      const user = db.users.find(u => u.id_pengguna === t.id_pengguna);
+      const userName = user ? user.username : 'User';
+      return { title: `${userName} - ${t.judul_list}`, time: t.waktu_selesai, type: "To-Do", status: t.status, description: t.isi_list };
+    });
 
   const reminderEvents = db.reminders
     .filter(r => r.tanggal === dateISO)

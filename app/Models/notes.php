@@ -14,5 +14,6 @@ class notes extends Model
     protected $fillable = [
         'judul_notes',
         'isi_notes',
+        'voice_memo',
     ];
 }

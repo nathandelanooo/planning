@@ -203,24 +203,27 @@
             </div>
           </div>
 
-          <form id="notesForm" action="/notes" method="POST">
+          <form id="notesForm" action="/notes" method="POST" enctype="multipart/form-data">
             @csrf
             <input type="hidden" id="notes_id_notes">
             <input type="hidden" id="notes_id_pengguna" value="1">
 
-            <!-- Judul Notes -->
             <div class="mb-3">
               <label class="form-label">Judul Notes</label>
               <input type="text" name="judul_notes" class="form-control" id="notes_judul_notes" placeholder="Misal: Ide Project" required>
             </div>
 
-            <!-- Isi Notes -->
             <div class="mb-3">
               <label class="form-label">Isi Notes</label>
               <textarea class="form-control" name="isi_notes" id="notes_isi_notes" rows="6" placeholder="Tulis isi catatan..." required></textarea>
             </div>
 
-            <!-- Tombol Simpan -->
+            <div class="mb-3">
+              <label class="form-label">Voice Memo (MP3 / WAV)</label>
+              <input type="file" name="voice_memo" class="form-control" id="notes_voice_memo" accept="audio/mp3, audio/wav">
+              <small class="text-muted" style="font-size: 0.75rem;">*Maksimal ukuran audio 5MB</small>
+            </div>
+
             <button class="btn btn-primary w-100" style="background:var(--primary);border-color:var(--primary);border-radius:14px;" type="submit">
               Simpan Notes
             </button>
@@ -250,9 +253,22 @@
                 <div class="d-flex justify-content-between align-items-start gap-2">
                   <div class="flex-grow-1">
                     <div class="fw-semibold mb-1" style="font-size: 0.95rem;">{{ $note->judul_notes }}</div>
-                    <div class="text-muted" style="font-size: 0.85rem; line-height: 1.5;">
+                    <div class="text-muted mb-2" style="font-size: 0.85rem; line-height: 1.5;">
                       {{ Str::limit($note->isi_notes, 150) }}
                     </div>
+
+                    @if($note->voice_memo)
+                      <div class="mt-2" style="background: #f9f9f9; padding: 12px; border-radius: 12px; border: 1px solid var(--border);">
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                          <i class="fa-solid fa-volume-high" style="color: var(--primary);"></i>
+                          <div class="fw-semibold" style="font-size: 0.9rem;">Voice Memo</div>
+                        </div>
+                        <audio controls style="width: 100%; max-width: 400px; height: 36px;">
+                          <source src="{{ asset('storage/' . $note->voice_memo) }}" type="audio/mpeg">
+                          Browser lu gak ngedukung pemutar audio HTML5.
+                        </audio>
+                      </div>
+                    @endif
                   </div>
                   
                   <div class="d-flex gap-1 flex-shrink-0">

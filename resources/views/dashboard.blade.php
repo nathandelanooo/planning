@@ -19,18 +19,10 @@
                 <a href="#" class="list-group-item list-group-item-action bg-transparent text-white active-link">
                     <i class="lni lni-home me-3"></i>Dashboard
                 </a>
-                <a href="#" class="list-group-item list-group-item-action bg-transparent text-white opacity-75">
-                    <i class="lni lni-users me-3"></i>Kelola User
+                <a href="/index" class="list-group-item list-group-item-action bg-transparent text-white opacity-75">
+                    <i class="lni lni-users me-3"></i>Main Page
                 </a>
-                <a href="#" class="list-group-item list-group-item-action bg-transparent text-white opacity-75">
-                    <i class="lni lni-package me-3"></i>Data Produk
-                </a>
-                <a href="#" class="list-group-item list-group-item-action bg-transparent text-white opacity-75">
-                    <i class="lni lni-investment me-3"></i>Laporan Keuangan
-                </a>
-                <a href="#" class="list-group-item list-group-item-action bg-transparent text-white opacity-75 border-top border-secondary mt-4pt">
-                    <i class="lni lni-cog me-3"></i>Pengaturan
-                </a>
+                
             </div>
         </div>
         <div id="page-content-wrapper" class="w-100" style="position: relative;">

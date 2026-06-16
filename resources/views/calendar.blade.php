@@ -285,6 +285,9 @@
                       <div class="text-muted small mt-1">
                           <i class="fa-regular fa-clock"></i> {{ $event['waktu_mulai'] }} - {{ $event['waktu_selesai'] }}
                       </div>
+                      @if($event['isi_list'])
+                          <div class="text-muted small mt-2" style="font-style: italic;">{{ $event['isi_list'] }}</div>
+                      @endif
                   </div>
               @empty
                   <div class="empty-state">Tidak ada agenda di tanggal ini.</div>
@@ -307,18 +310,33 @@
             <div class="summary-mini w-100">
               <div class="muted">Total Event Bulan Ini</div>
               <!-- Hitung total seluruh event di bulan ini -->
-              <div class="fw-bold fs-5">{{ count($todos ?? []) }} Event</div>
+              @php
+                $totalEvents = 0;
+                foreach($eventsByDate ?? [] as $events) {
+                  $totalEvents += count($events);
+                }
+              @endphp
+              <div class="fw-bold fs-5">{{ $totalEvents }} Event</div>
             </div>
           </div>
 
           <!-- Daftar Lengkap Semua Event di Sidebar Kanan -->
           <div style="max-height: 500px; overflow-y: auto; padding-right: 5px;">
-              @forelse($todos ?? [] as $event)
+              @php
+                $allEvents = [];
+                foreach($eventsByDate ?? [] as $dateEvents) {
+                  $allEvents = array_merge($allEvents, $dateEvents);
+                }
+              @endphp
+              @forelse($allEvents as $event)
                   <div class="event-card mb-2">
-                      <div class="fw-bold">{{ $event['summary'] ?? 'Tanpa Judul' }}</div>
+                      <div class="fw-bold">{{ $event['judul_list'] ?? 'Tanpa Judul' }}</div>
                       <div class="text-muted small">
-                          {{ isset($event['start']['dateTime']) ? \Carbon\Carbon::parse($event['start']['dateTime'])->format('d M, H:i') : 'Seharian' }}
+                          <i class="fa-regular fa-clock me-1"></i> {{ $event['waktu_mulai'] }} - {{ $event['waktu_selesai'] }}
                       </div>
+                      @if($event['isi_list'])
+                          <div class="text-muted small" style="font-size: 0.8rem; margin-top: 4px;">{{ $event['isi_list'] }}</div>
+                      @endif
                   </div>
               @empty
                   <div class="empty-state">Belum ada event bulan ini.</div>

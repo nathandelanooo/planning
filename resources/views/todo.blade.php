@@ -182,7 +182,7 @@
                     </td>
                     <td class="text-end">
                       <a href="/todo/{{ $item->id_to_do_list }}/edit" class="action-btn edit"><i class="fa-solid fa-pencil"></i></a>
-                      <button class="action-btn delete"><i class="fa-solid fa-trash"></i></button>
+                      <button class="action-btn delete" onclick="deleteTodo({{ $item->id_to_do_list }})"><i class="fa-solid fa-trash"></i></button>
                     </td>
                   </tr>
                 @empty
